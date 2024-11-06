@@ -1,0 +1,12 @@
+/* src/App.css */
+
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.chart-container {
+  width: 80%; /* Adjust width as needed */
+  margin-bottom: 20px; /* Space between charts */
+}

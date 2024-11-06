@@ -1,2 +1,2 @@
-# Data-Visualization
-Course: 90529 - S5892646
+# d3jsExperience
+This repository is for a ReactJS,Typescript app to demonstrate some d3.js capabilities.
