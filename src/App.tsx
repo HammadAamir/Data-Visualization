@@ -10,26 +10,39 @@ const App: React.FC = () => {
   return (
     <div className="App">
       
-      
-      <div className="chart-container">
-        <BarChart />
-      </div>
-      
-      <div className="chart-container">
-        <CountryEmissionsChart country="Qatar"/>
-      </div>
-
-      <div className="chart-container">
-      <EuropeanCountries country="Afghanistan"/>
-      </div>
-      
-      <div className="chart-container">
-        <DifferentCountries country="Rwanda"/>
-      </div>
-      
-      <div className="chart-container">
-        <HeatMap year={2022}/>
-      </div>
+      <div className="homepage">
+      <section className="section">
+        <div className="background-image"></div>
+        <div className="card">
+            <BarChart />
+        </div>
+      </section>
+      <section className="section">
+        <div className="background-image"></div>
+        <div className="card">
+          <CountryEmissionsChart country="Qatar"/>
+        </div>
+      </section>
+      <section className="section">
+        <div className="background-image"></div>
+        <div className="card">
+          <EuropeanCountries country="Afghanistan"/>
+        </div>
+      </section>
+      <section className="section">
+        <div className="background-image"></div>
+        <div className="card">
+          <DifferentCountries country="Rwanda"/>
+        </div>
+      </section>
+      <section className="section">
+        <div className="background-image"></div>
+        <div className="card">
+          <HeatMap year={2022}/>
+        </div>
+      </section>
+      {/* Add more sections if needed */}
+    </div>
     </div>
   );
 };
