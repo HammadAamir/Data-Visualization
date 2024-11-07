@@ -11,6 +11,17 @@ const App: React.FC = () => {
     <div className="App">
       
       <div className="homepage">
+
+      <nav className="navbar">
+        <h1>Data Visualization</h1>
+      </nav>
+
+{/* Subheading */}
+<div className="project-description">
+  <p>Comparing Categories.</p>
+  <p>Based on the dataset given for CO2 Emission and Fossil & Land Use.</p>
+  <h2>D3.js for Data Visualization</h2>
+</div>
       <section className="section">
         <div className="background-image"></div>
         <div className="card">

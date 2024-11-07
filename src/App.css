@@ -11,23 +11,67 @@
   margin-bottom: 20px; /* Space between charts */
 }
 
+  /* https://img.freepik.com/free-vector/realistic-polygonal-background_52683-60158.jpg */
+  /* https://img.freepik.com/premium-photo/generative-ai-theme-beautiful-surface-business-graph-design-natural-abstract-background_947317-55898.jpg */
+  /* background-image: url('https://images.unsplash.com/photo-1690207925026-d774e9571791?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); Single background image for the entire page */
+ 
+/* 1. Sticky Navbar Styling */
+.navbar {
+  position: fixed; /* Makes the navbar stay at the top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Dark background with transparency */
+  color: white;
+  text-align: left;
+  padding: 15px 0;
+  font-family: 'Helvetica', sans-serif; /* Use a clean, modern font */
+  z-index: 10; /* Ensure it's above the background image */
+}
 
-/* Homepage.css */
+.navbar h1 {
+  margin: 0;
+  margin-left: 2rem;
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+/* 2. Project Description Styling (Sub-heading) */
+.project-description {
+  position: relative;
+  top: 80px; /* Adjust the position of the sub-heading so it's not hidden under the navbar */
+  padding: 20px;
+  text-align: center;
+  font-family: 'Georgia', serif; /* Elegant font for the description */
+  font-size: 2rem;
+  color: #8bcfcf;
+  text-shadow: 3px 0 #222, -2px 0 #222, 0 2px #222, 0 -2px #222,
+             1px 1px #222, -1px -1px #222, 1px -1px #222, -1px 1px #222;
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+.project-description p {
+  margin: 10px 0;
+  line-height: 1.6;
+}
+
 
 .homepage {
-  scroll-snap-type: y mandatory;
+  scroll-snap-type: y;
   overflow-y: scroll;
   height: 100vh;
-  background-image: url('https://img.freepik.com/free-vector/gradient-wireframe-background_23-2148993324.jpg'); /* Single background image for the entire page */
-  background-size: cover; 
-  background-attachment: fixed; 
-  background-position: center; 
+  background-image: url('https://images.unsplash.com/photo-1690207925026-d774e9571791?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+  background-size: cover;
+  background-attachment: scroll; /* Allows background to scroll with the page */
+  background-position: center top; /* Start the background from the top center */
 }
 
 .section {
   position: relative;
   height: 100vh;
-  width: 100vw; 
+  width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,10 +81,10 @@
 .card {
   position: relative;
   z-index: 2;
-  background-color: rgba(255, 255, 255, 0.9); 
+  background-color: rgba(255, 255, 255, 0.9);
   padding: 20px;
   border-radius: 15px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); 
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
   max-width: 80%;
   max-height: 80%;
   display: flex;
