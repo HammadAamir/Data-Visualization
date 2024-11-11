@@ -40,7 +40,9 @@ const BarChart: React.FC = () => {
         .domain([0, d3.max(filteredData, (d) => +d["Annual_CO2_emissions_(per_capita)"]) || 0])
         .nice()
         .range([height - margin.bottom, margin.top]);
-
+        var div = d3.select("body").append("div")
+        .attr("class", "tooltip-donut")
+        .style("opacity", 0);
       // Add X axis to the chart
       svg
         .append("g")
@@ -67,8 +69,40 @@ const BarChart: React.FC = () => {
         .attr("y", (d) => y(+d["Annual_CO2_emissions_(per_capita)"]))
         .attr("width", x.bandwidth())
         .attr("height", (d) => height - margin.bottom - y(+d["Annual_CO2_emissions_(per_capita)"]))
-        .attr("fill", "steelblue");
-
+        .attr("fill", "steelblue")
+        .on('mouseover', function (d, i) {
+          console.log("here", d.pageX)
+          
+          // d3.select(this).transition()
+          //      .duration(50)
+          //      .attr('opacity', '.85')
+          div.transition()
+               .duration(50)
+               .style("opacity", 1);
+          // let num = (Math.round((d.value / d.data.all) * 100)).toString() + '%';
+          div.html(`<b>${i['Annual_CO2_emissions_(per_capita)']}</b><p>${i.Entity}</p>`)
+               .style("left", (d.pageX + 10) + "px")
+               .style("top", (d.pageY - 15) + "px");
+          
+          d3.select(this)
+          .style("transform", "scale(1.02,1.02)")
+          .style("transform-origin", "50% 50%")
+          d3.select(this).transition().duration(200)
+          .style("fill", "purple");
+              })
+     .on('mouseout', function (d, i) {
+          // d3.select(this).transition()
+          //      .duration(50)
+          //      .attr('opacity', '1')
+          d3.select(this)
+          .style("transform", "scale(1,1)") 
+          .style("transform-origin", "50% 50%")
+          d3.select(this).transition().duration(500)
+          .style("fill", "steelblue");
+          div.transition()
+               .duration(100)
+               .style("opacity", 0);
+              });
       // Add chart title
       svg
         .append("text")

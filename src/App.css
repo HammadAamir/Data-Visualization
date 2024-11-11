@@ -57,12 +57,25 @@
   line-height: 1.6;
 }
 
+div.tooltip-donut {
+  position: absolute;
+  text-align: center;
+  padding: .5rem;
+  background: #FFFFFF;
+  color: #313639;
+  border: 1px solid #313639;
+  border-radius: 8px;
+  pointer-events: none;
+  font-size: 1.3rem;
+  z-index: 10;
+}
 
 .homepage {
   scroll-snap-type: y;
   overflow-y: scroll;
   height: 100vh;
-  background-image: url('https://images.unsplash.com/photo-1690207925026-d774e9571791?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+  /* https://images.unsplash.com/photo-1690207925026-d774e9571791?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D */
+  background-image: url('../public/background.jpg');
   background-size: cover;
   background-attachment: scroll; /* Allows background to scroll with the page */
   background-position: center top; /* Start the background from the top center */
