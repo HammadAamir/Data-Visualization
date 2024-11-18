@@ -1,39 +1,38 @@
-// src/components/CountryEmissionsChart.tsx
+
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-const CountryEmissionsChart: React.FC<{ country: string }> = ({ country }) => {
+const EuropeEmissionsChart: React.FC = () => {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
   useEffect(() => {
     // Load the CSV data
     d3.csv('/co-emissions-per-capita.csv').then((data) => {
-      // Filter data for the selected country and years 2012 to 2022
+      // List of European countries (can be extended)
+      const europeanCountries = [
+        'Germany', 'France', 'United Kingdom', 'Italy', 'Spain',
+        'Netherlands', 'Poland', 'Sweden', 'Norway', 'Finland',
+        'Denmark', 'Portugal', 'Greece', 'Ireland', 'Austria',
+        'Belgium', 'Switzerland', 'Czechia'
+      ];
+
+      // Filter data for European countries
       const filteredData = data
-        .filter((d) => d['Entity'] === country && +d['Year'] >= 2012 && +d['Year'] <= 2022)
+        .filter((d) => europeanCountries.includes(d['Entity']))
         .map((d) => ({
-          year: d['Year'],
+          country: d['Entity'],
+          year: +d['Year'],
           emissions: +d['Annual_CO2_emissions_(per_capita)'],
         }));
-
-      // Set dimensions and margins for the chart
+      // Group data by country
+      const groupedData = d3.group(filteredData, (d) => d.country);
+        console.log(groupedData)
+      // Set dimensions and margins
       const width = 800;
-      const height = 400;
-      const margin = { top: 20, right: 30, bottom: 40, left: 60 };
+      const height = 500;
+      const margin = { top: 20, right: 50, bottom: 50, left: 70 };
 
-      // Create scales for x and y axes
-      const x = d3
-        .scaleBand()
-        .domain(filteredData.map((d) => d.year))
-        .range([0, width])
-        .padding(0.1);
-
-      const y = d3
-        .scaleLinear()
-        .domain([0, d3.max(filteredData, (d) => d.emissions)!])
-        .range([height, 0]);
-
-      // Clear any previous SVG content if it exists
+      // Clear any previous content
       d3.select(svgRef.current).selectAll('*').remove();
 
       // Create the SVG container
@@ -44,35 +43,102 @@ const CountryEmissionsChart: React.FC<{ country: string }> = ({ country }) => {
         .append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
 
+      // Define scales
+      const x = d3
+        .scaleLinear()
+        .domain(d3.extent(filteredData, (d) => d.year) as [number, number])
+        .range([0, width]);
+
+      const y = d3
+        .scaleLinear()
+        .domain([0, d3.max(filteredData, (d) => d.emissions)!])
+        .nice()
+        .range([height, 0]);
+
       // Add X-axis
       svg
         .append('g')
         .attr('transform', `translate(0,${height})`)
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x).tickFormat(d3.format('d')));
 
       // Add Y-axis
       svg.append('g').call(d3.axisLeft(y));
 
-      // Create bars for the chart
+      // Add labels
       svg
-        .selectAll('rect')
-        .data(filteredData)
-        .enter()
-        .append('rect')
-        .attr('x', (d) => x(d.year)!)
-        .attr('y', (d) => y(d.emissions))
-        .attr('width', x.bandwidth())
-        .attr('height', (d) => height - y(d.emissions))
-        .attr('fill', '#4285F4');
+        .append('text')
+        .attr('x', width / 2)
+        .attr('y', height + margin.bottom - 10)
+        .attr('text-anchor', 'middle')
+        .text('Year');
+
+      svg
+        .append('text')
+        .attr('x', -height / 2)
+        .attr('y', -margin.left + 15)
+        .attr('text-anchor', 'middle')
+        .attr('transform', 'rotate(-90)')
+        .text('CO₂ Emissions per Capita (tons)');
+
+      // Define line generator
+      const line = d3
+        .line<{ year: number; emissions: number }>()
+        .x((d) => x(d.year))
+        .y((d) => y(d.emissions));
+
+      // Draw lines for each country
+      const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+      groupedData.forEach((values, country) => {
+        svg
+          .append('path')
+          .datum(values)
+          .attr('fill', 'none')
+          .attr('stroke', color(country))
+          .attr('stroke-width', 2)
+          .attr('d', line)
+          .attr('opacity', 0)
+          .transition()
+          .duration(1000)
+          .delay(Math.random() * 1000) // Staggered animation
+          .attr('opacity', 1);
+      });
+
+      // Add legend
+      const legend = svg
+        .append('g')
+        .attr('transform', `translate(${20}, 0)`);
+
+        let legendIndex = 0; // Counter for legend items
+        groupedData.forEach((_, country) => {
+          console.log(country.length)
+          legend
+            .append('rect')
+            .attr('x', -5)
+            .attr('y', legendIndex * 20)
+            .attr('width', country.length * 7)
+            .attr('height', 15)
+            .attr('fill', color(country));
+        
+          legend
+            .append('text')
+            .attr('x', 0)
+            .attr('y', legendIndex * 20 + 10)
+            .attr('text-anchor', 'start')
+            .text(country)
+            .attr('font-size', '9px');
+        
+          legendIndex++; // Increment the counter for the next legend item
+        });
     });
-  }, [country]);
+  }, []);
 
   return (
     <div>
-      <h2>CO₂ Emissions per Capita in {country} (2012-2022)</h2>
+      <h2>CO₂ Emissions per Capita in European Countries Over Time</h2>
       <svg ref={svgRef}></svg>
     </div>
   );
 };
 
-export default CountryEmissionsChart;
+export default EuropeEmissionsChart;
