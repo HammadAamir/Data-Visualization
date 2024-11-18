@@ -1,95 +1,102 @@
-// src/components/CO2Heatmap.tsx
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
+import { sankey, sankeyLinkHorizontal, SankeyNode, SankeyLink } from 'd3-sankey';
 
-interface CO2HeatmapProps {
-  year: number;
-}
+// Define the types for Sankey nodes and links
+type SankeyNodeType = SankeyNode<{ name: string }, {}>;
+type SankeyLinkType = SankeyLink<{ name: string }, {}>;
 
-const HeatMap: React.FC<CO2HeatmapProps> = ({ year }) => {
+const AlluvialDiagram: React.FC = () => {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
   useEffect(() => {
-    // Load the CSV data
-    d3.csv('/co2-fossil-plus-land-use.csv').then((data) => {
-      // Filter data for the specified year and calculate total emissions
-      const filteredData = data
-        .filter((d) => +d['Year'] === year)
-        .map((d) => ({
-          entity: d['Entity'],
-          fossilEmissions: +d['Annual_CO₂_emissions'],
-          landUseEmissions: +d['Annual_CO₂_emissions_from_land-use_change'],
-          totalEmissions: +d['Annual_CO₂_emissions'] + +d['Annual_CO₂_emissions_from_land-use_change'],
-        }))
-        .sort((a, b) => b.totalEmissions - a.totalEmissions)
-        .slice(0, 10);
+    // Data for the alluvial diagram
+    const data = {
+      nodes: [
+        { name: "Stage A" },
+        { name: "Stage B" },
+        { name: "Stage C" },
+        { name: "Stage D" },
+      ],
+      links: [
+        { source: 0, target: 1, value: 50 },
+        { source: 0, target: 2, value: 30 },
+        { source: 1, target: 3, value: 70 },
+        { source: 2, target: 3, value: 10 },
+      ],
+    };
 
-      // Set dimensions and margins for the heatmap
-      const width = 600;
-      const height = 400;
-      const margin = { top: 50, right: 30, bottom: 40, left: 100 };
+    // Dimensions
+    const width = 600;
+    const height = 400;
 
-      // Clear any previous SVG content
-      d3.select(svgRef.current).selectAll('*').remove();
+    // Clear previous SVG content
+    const svg = d3.select(svgRef.current);
+    svg.selectAll('*').remove();
 
-      // Create the SVG container
-      const svg = d3
-        .select(svgRef.current)
-        .attr('width', width + margin.left + margin.right)
-        .attr('height', height + margin.top + margin.bottom)
-        .append('g')
-        .attr('transform', `translate(${margin.left},${margin.top})`);
+    // Create a Sankey generator
+    const sankeyGenerator = sankey<SankeyNodeType, SankeyLinkType>()
+      .nodeWidth(20)
+      .nodePadding(10)
+      .extent([
+        [0, 0],
+        [width, height],
+      ]);
 
-      // Define scales for the x-axis (emission type) and y-axis (countries)
-      const x = d3
-        .scaleBand()
-        .domain(['Fossil Fuel Emissions', 'Land-Use Change Emissions'])
-        .range([0, width])
-        .padding(0.05);
-
-      const y = d3
-        .scaleBand()
-        .domain(filteredData.map((d) => d.entity))
-        .range([0, height])
-        .padding(0.05);
-
-      // Define color scale for the heatmap
-      const colorScale = d3
-        .scaleSequential(d3.interpolateOrRd)
-        .domain([0, d3.max(filteredData, (d) => Math.max(d.fossilEmissions, d.landUseEmissions))!]);
-
-      // Add x-axis
-      svg
-        .append('g')
-        .attr('transform', `translate(0,${height})`)
-        .call(d3.axisBottom(x));
-
-      // Add y-axis
-      svg.append('g').call(d3.axisLeft(y));
-
-      // Create the heatmap cells
-      svg
-        .selectAll()
-        .data(filteredData.flatMap((d) => [
-          { entity: d.entity, type: 'Fossil Fuel Emissions', value: d.fossilEmissions },
-          { entity: d.entity, type: 'Land-Use Change Emissions', value: d.landUseEmissions },
-        ]))
-        .enter()
-        .append('rect')
-        .attr('x', (d) => x(d.type)!)
-        .attr('y', (d) => y(d.entity)!)
-        .attr('width', x.bandwidth())
-        .attr('height', y.bandwidth())
-        .attr('fill', (d) => colorScale(d.value));
+    // Prepare Sankey data
+    const sankeyData = sankeyGenerator({
+      nodes: data.nodes.map((d) => ({ ...d })),
+      links: data.links.map((d) => ({ ...d })),
     });
-  }, [year]);
+
+    const { nodes, links } = sankeyData;
+
+    // Draw links
+    svg
+      .append('g')
+      .selectAll('path')
+      .data(links)
+      .join('path')
+      .attr('d', sankeyLinkHorizontal())
+      .attr('fill', 'none')
+      .attr('stroke', '#888')
+      .attr('stroke-width', (d) => Math.max(1, d.width!))
+      .attr('opacity', 0.7);
+
+    // Draw nodes
+    svg
+      .append('g')
+      .selectAll('rect')
+      .data(nodes)
+      .join('rect')
+      .attr('x', (d) => d.x0!)
+      .attr('y', (d) => d.y0!)
+      .attr('width', (d) => d.x1! - d.x0!)
+      .attr('height', (d) => d.y1! - d.y0!)
+      .attr('fill', '#69b3a2')
+      .attr('stroke', '#000');
+
+    // Add node labels
+    svg
+      .append('g')
+      .selectAll('text')
+      .data(nodes)
+      .join('text')
+      .attr('x', (d) => d.x0! - 6)
+      .attr('y', (d) => (d.y1! + d.y0!) / 2)
+      .attr('text-anchor', 'end')
+      .attr('alignment-baseline', 'middle')
+      .text((d) => d.name)
+      .style('font-size', '12px')
+      .style('fill', 'black');
+  }, []);
 
   return (
     <div>
-      <h2>CO₂ Emissions Heatmap (Top 10 Countries) - {year}</h2>
-      <svg ref={svgRef}></svg>
+      <h2>Simple Alluvial Diagram</h2>
+      <svg ref={svgRef} width="600" height="400"></svg>
     </div>
   );
 };
 
-export default HeatMap;
+export default AlluvialDiagram;
