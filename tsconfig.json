@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    
     "target": "es5",
     "lib": [
       "dom",
@@ -14,6 +15,7 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
+    "useUnknownInCatchVariables": false,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,

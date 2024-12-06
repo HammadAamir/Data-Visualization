@@ -60,7 +60,7 @@ const AlluvialDiagram: React.FC = () => {
       .attr('d', sankeyLinkHorizontal())
       .attr('fill', 'none')
       .attr('stroke', '#888')
-      .attr('stroke-width', (d) => Math.max(1, d.width!))
+      // .attr('stroke-width', (d) => Math.max(1, d.width!))
       .attr('opacity', 0.7);
 
     // Draw nodes
@@ -69,10 +69,10 @@ const AlluvialDiagram: React.FC = () => {
       .selectAll('rect')
       .data(nodes)
       .join('rect')
-      .attr('x', (d) => d.x0!)
-      .attr('y', (d) => d.y0!)
-      .attr('width', (d) => d.x1! - d.x0!)
-      .attr('height', (d) => d.y1! - d.y0!)
+      // .attr('x', (d) => d.x0!)
+      // .attr('y', (d) => d.y0!)
+      // .attr('width', (d) => d.x1! - d.x0!)
+      // .attr('height', (d) => d.y1! - d.y0!)
       .attr('fill', '#69b3a2')
       .attr('stroke', '#000');
 
@@ -82,11 +82,11 @@ const AlluvialDiagram: React.FC = () => {
       .selectAll('text')
       .data(nodes)
       .join('text')
-      .attr('x', (d) => d.x0! - 6)
-      .attr('y', (d) => (d.y1! + d.y0!) / 2)
+      // .attr('x', (d) => d.x0! - 6)
+      // .attr('y', (d) => (d.y1! + d.y0!) / 2)
       .attr('text-anchor', 'end')
       .attr('alignment-baseline', 'middle')
-      .text((d) => d.name)
+      // .text((d) => d.name)
       .style('font-size', '12px')
       .style('fill', 'black');
   }, []);
