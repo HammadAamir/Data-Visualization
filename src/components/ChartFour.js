@@ -14,9 +14,9 @@ const RaceBarChart = () => {
 
       const dataByYear = d3.group(parsedData, (d) => d.year);
 
-      const width = 700;
+      const width = 800;
       const height = 500;
-      const margin = { top: 50, right: 10, bottom: 30, left: 50 };
+      const margin = { top: 50, right: 50, bottom: 70, left: 100 };
 
       d3.select(svgRef.current).selectAll('*').remove();
 
@@ -122,7 +122,7 @@ const RaceBarChart = () => {
 
   return (
     <div>
-      <h2>Top CO₂ Emitters Over Time</h2>
+      <h2 style={{marginTop: '10px', color: 'white'}}>Top CO₂ Emitters Over Time</h2>
       <svg ref={svgRef}></svg>
     </div>
   );

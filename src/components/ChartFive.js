@@ -7,14 +7,14 @@ const CO2Heatmap = ({ year }) => {
   useEffect(() => {
     // Load the CSV data
     d3.csv(process.env.PUBLIC_URL + '/co2-fossil-plus-land-use.csv').then((data) => {
-      // Filter data for the specified year and calculate total emissions
+      // Filter data for the specified year and calculate total emissions, columns used from the csv file
       const filteredData = data
         .filter((d) => +d['Year'] === year)
         .map((d) => ({
           entity: d['Entity'],
-          fossilEmissions: +d['Annual_CO₂_emissions'],
-          landUseEmissions: +d['Annual_CO₂_emissions_from_land-use_change'],
-          totalEmissions: +d['Annual_CO₂_emissions'] + +d['Annual_CO₂_emissions_from_land-use_change'],
+          fossilEmissions: +d['Annual_CO2_emissions'],
+          landUseEmissions: +d['Annual_CO2_emissions_from_land_use_change'],
+          totalEmissions: +d['Annual_CO2_emissions'] + +d['Annual_CO2_emissions_from_land_use_change'],
         }))
         .sort((a, b) => b.totalEmissions - a.totalEmissions)
         .slice(0, 10);

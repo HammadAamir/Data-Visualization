@@ -10,7 +10,6 @@ import WorldMapChart from './components/WorldMapGraph';
 import AlluvialDiagram from './components/Alluvial';
 
 const App = () => {
-  const [energyType, setEnergyType] = useState('Gas');
   return (
     <div className="App">
       <div className="homepage">

@@ -2,11 +2,11 @@ import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
 
-const WorldMap = () => {
+const WorldMapChart = () => {
   const mapRef = useRef(null);
 
   useEffect(() => {
-    const width = 960;
+    const width = 700;
     const height = 600;
 
     const svg = d3.select(mapRef.current)
@@ -77,4 +77,4 @@ const WorldMap = () => {
     <div ref={mapRef}></div>
   );
 };
-export default WorldMap;
+export default WorldMapChart;
