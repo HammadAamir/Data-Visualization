@@ -1,0 +1,16 @@
+#  Montana 12-Month Period Average Temperature
+# Units: Degrees Fahrenheit
+# Missing: -99
+Date,Value
+201901,41.5
+201902,41
+201903,40.7
+201904,41.1
+201905,40.4
+201906,40.4
+201907,40.2
+201908,40.2
+201909,40.4
+201910,39.9
+201911,39.8
+201912,39.9
